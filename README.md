@@ -1,2 +1,2 @@
-# wave_function_collapse_python
-Python implementation of Wave Function Collapse algorithm
+# Python implementation of Wave Function Collapse algorithm for interiors generation
+
