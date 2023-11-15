@@ -22,7 +22,6 @@ tilemap = TileMap(chunk_width, chunk_height, scale_multiplier)
 cursor = Cursor()
 
 while running:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -33,6 +32,7 @@ while running:
             
             if event.key == pygame.K_s:
                tilemap.generate_rules()
+               pygame.image.save(screen, f'generated_samples/sample_{time.time()}.jpg')
             
         if event.type == pygame.MOUSEBUTTONDOWN:
             for tile in tilemap.tiles:

@@ -1,0 +1,104 @@
+{
+    "wall_corner|0": {
+        "up": [],
+        "down": [
+            "wall|0"
+        ],
+        "left": [],
+        "right": [
+            "wall|-90"
+        ]
+    },
+    "wall|0": {
+        "up": [
+            "wall_corner|0"
+        ],
+        "down": [
+            "wall_corner|-270"
+        ],
+        "left": [],
+        "right": [
+            "floor_inside|0"
+        ]
+    },
+    "wall_corner|-270": {
+        "up": [
+            "wall|0"
+        ],
+        "down": [],
+        "left": [],
+        "right": [
+            "wall|-270"
+        ]
+    },
+    "wall|-90": {
+        "up": [],
+        "down": [
+            "floor_inside|0"
+        ],
+        "left": [
+            "wall_corner|0"
+        ],
+        "right": [
+            "wall_corner|-90"
+        ]
+    },
+    "floor_inside|0": {
+        "up": [
+            "wall|-90"
+        ],
+        "down": [
+            "wall|-270"
+        ],
+        "left": [
+            "wall|0"
+        ],
+        "right": [
+            "door|-180"
+        ]
+    },
+    "wall|-270": {
+        "up": [
+            "floor_inside|0"
+        ],
+        "down": [],
+        "left": [
+            "wall_corner|-270"
+        ],
+        "right": [
+            "wall_corner|-180"
+        ]
+    },
+    "wall_corner|-90": {
+        "up": [],
+        "down": [
+            "door|-180"
+        ],
+        "left": [
+            "wall|-90"
+        ],
+        "right": []
+    },
+    "door|-180": {
+        "up": [
+            "wall_corner|-90"
+        ],
+        "down": [
+            "wall_corner|-180"
+        ],
+        "left": [
+            "floor_inside|0"
+        ],
+        "right": []
+    },
+    "wall_corner|-180": {
+        "up": [
+            "door|-180"
+        ],
+        "down": [],
+        "left": [
+            "wall|-270"
+        ],
+        "right": []
+    }
+}
