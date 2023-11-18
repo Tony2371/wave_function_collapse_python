@@ -36,14 +36,20 @@ class TileMap:
         self.tiles = [Tile(pos_x=x*scale_multiplier, pos_y=y*scale_multiplier) for x in range(size_x) for y in range(size_y)]
 
 class Cursor:
-    def __init__(self):
+    def __init__(self, cursor_type):
         self.pos_x = 0
         self.pos_y = 0
-        self.available_tiles = [tile_name.replace('.png', '') for tile_name in os.listdir('textures_structures')]
+        
+        if cursor_type == 'room':
+            self.texture_folder = 'textures_rooms'
+        if cursor_type == 'structure':
+            self.texture_folder == 'textures_structures'
+        
+        self.available_tiles = [tile_name.replace('.png', '') for tile_name in os.listdir(self.texture_folder)]
         self.selected_tile_index = 0
         self.selected_tile_name = self.available_tiles[self.selected_tile_index]
         self.selected_rotation = 0
-        self.loaded_texture = pygame.image.load(f'textures_structures/{self.available_tiles[self.selected_tile_index]}.png')
+        self.loaded_texture = pygame.image.load(f'{self.texture_folder}/{self.available_tiles[self.selected_tile_index]}.png')
         self.loaded_texture.set_alpha(128)
 
     def switch_tile_foward(self):
@@ -51,7 +57,7 @@ class Cursor:
         if self.selected_tile_index >= len(self.available_tiles):
             self.selected_tile_index = 0
             
-        self.loaded_texture = pygame.image.load(f'textures_structures/{self.available_tiles[self.selected_tile_index]}.png')
+        self.loaded_texture = pygame.image.load(f'{self.texture_folder}/{self.available_tiles[self.selected_tile_index]}.png')
         self.loaded_texture.set_alpha(128)
         self.selected_tile_name = self.available_tiles[self.selected_tile_index]
         self.selected_rotation = 0
@@ -61,7 +67,7 @@ class Cursor:
         if self.selected_tile_index <= -1*len(self.available_tiles)-1:
             self.selected_tile_index = 0
         
-        self.loaded_texture = pygame.image.load(f'textures_structures/{self.available_tiles[self.selected_tile_index]}.png')
+        self.loaded_texture = pygame.image.load(f'{self.texture_folder}/{self.available_tiles[self.selected_tile_index]}.png')
         self.loaded_texture.set_alpha(128)
         self.selected_tile_name = self.available_tiles[self.selected_tile_index]
         self.selected_rotation = 0
@@ -74,10 +80,12 @@ class Cursor:
 
 class TextureCache:
     def __init__(self):
-        self.textures = {}
+        self.room_textures = {}
+        for file in os.listdir('textures_rooms'):
+            self.room_textures[file.replace('.png', '')] = pygame.image.load(f'textures_rooms/{file}')
 
-    def get_texture(self, file_path):
-        if file_path not in self.textures:
-            # Load the texture if it's not already loaded
-            self.textures[file_path] = pygame.image.load(file_path)
-        return self.textures[file_path]
+        self.structure_textures = {}
+        for file in os.listdir('textures_structures'):
+            self.structure_textures[file.replace('.png', '')] = pygame.image.load(f'textures_structures/{file}')
+
+        self.empty_texture = pygame.image.load('textures_rooms/empty.png')

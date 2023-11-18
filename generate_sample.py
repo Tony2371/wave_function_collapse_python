@@ -19,7 +19,9 @@ running = True
 
 # PRELOADS
 tilemap = TileMap(chunk_width, chunk_height, scale_multiplier)
-cursor = Cursor()
+cursor_type = 'room'
+cursor = Cursor(cursor_type=cursor_type)
+texture_cache = TextureCache()
 
 while running:
     for event in pygame.event.get():
@@ -35,12 +37,20 @@ while running:
                pygame.image.save(screen, f'generated_samples/sample_{time.time()}.jpg')
             
         if event.type == pygame.MOUSEBUTTONDOWN:
-            for tile in tilemap.tiles:
-                if tile.pos_x == cursor.pos_x and tile.pos_y == cursor.pos_y:
+            for i, tile in enumerate(tilemap.tiles):
+                if tile.location.pos_x == cursor.pos_x and tile.location.pos_y == cursor.pos_y:
                     if event.button == 1:
-                        tile.update_tile(cursor.selected_tile_name, cursor.selected_rotation)
+                        tilemap.tiles[i] = Tile(pos_x=cursor.pos_x, 
+                                                pos_y=cursor.pos_y)
+                        if cursor_type == 'structure':
+                            tilemap.tiles[i].set_structure(structure_type=cursor.selected_tile_name, 
+                                                            rotation=cursor.selected_rotation)
+                        if cursor_type == 'room':
+                            tilemap.tiles[i].set_room(room_type=cursor.selected_tile_name)
+
                     if event.button == 3:
-                        tile.update_tile('floor_outside', 0)
+                        tilemap.tiles[i].room = None
+                        tilemap.tiles[i].structure = None
                     
                     if event.button == 4:
                         cursor.switch_tile_foward()
@@ -53,21 +63,19 @@ while running:
     cursor.pos_y = floor(mouse_y/100)*100
 
     # GENERAL RENDERING PART
+    screen.fill((0,0,0))
     for tile in tilemap.tiles:
-        screen.blit(tile.loaded_texture, (tile.pos_x, tile.pos_y))
+        if isinstance(tile.structure, TileStructure):
+            loaded_texture = pygame.transform.rotate(texture_cache.structure_textures[tile.structure.structure_type], tile.structure.rotation)
+            screen.blit(loaded_texture, (tile.location.pos_x, tile.location.pos_y))
+        
+        if isinstance(tile.room, TileRoom):
+            loaded_texture = pygame.transform.scale(texture_cache.room_textures[tile.room.room_type], (100, 100))
+            screen.blit(loaded_texture, (tile.location.pos_x, tile.location.pos_y))
 
-    '''
-    for tile in set(tilemap.tiles):
-        if tile.name != 'floor_outside':
-            font = pygame.font.Font('freesansbold.ttf', 16)
-            text = font.render(f'{tile.name}', True, (0, 0, 0))
-            all_x = [i.pos_x for i in tilemap.tiles if i.name == tile.name]
-            sum_pos_x = sum(all_x)/len(all_x)
-            all_y = [i.pos_y for i in tilemap.tiles if i.name == tile.name]
-            sum_pos_y = sum(all_y)/len(all_y)
+        else:
+            screen.blit(texture_cache.empty_texture, (tile.location.pos_x, tile.location.pos_y))
 
-            screen.blit(text, (sum_pos_x, sum_pos_y+45))
-    '''
     
     screen.blit(cursor.loaded_texture, (cursor.pos_x, cursor.pos_y)) # cursor should be rendered above everything
     font = pygame.font.Font('freesansbold.ttf', 16)
